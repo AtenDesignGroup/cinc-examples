@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * Implements hook_enable().
+ */
+function cinc_ex_content_type1_enable() {
+  cinc_ex_content_type1_create();
+}
+
+/**
+ * Creates the content type 'blog'
+ */
+function cinc_ex_content_type1_create() {
+  $blog = CINC::init('ContentType')
+    ->machine_name('blog');
+}
