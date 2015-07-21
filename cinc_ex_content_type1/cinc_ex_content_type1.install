@@ -4,13 +4,64 @@
  * Implements hook_enable().
  */
 function cinc_ex_content_type1_enable() {
+  // simple content type
   cinc_ex_content_type1_create();
 }
 
 /**
- * Creates the content type 'blog'
+ * Creates the content type 'blog'.
+ *
+ * Ultra simple content type creation.
  */
 function cinc_ex_content_type1_create() {
-  $blog = CINC::init('ContentType')
-    ->machine_name('blog');
+  // This creates a content type called blog. CINC will label this content type
+  // 'Blog' automatically.
+  CINC::init('ContentType')
+    ->machine_name('blog')
+    ->create_or_update();
+
+  // This creates a content type called news. CINC will label this content type
+  $news = CINC::init('ContentType')
+    ->machine_name('news')
+    // set the label manually to something other than the auto-generated label
+    ->set('title_label', 'Article')
+    // set the description
+    ->set('description', 'A timely post about something happening now')
+    ->create_or_update();
+
+  // Add the body field to this content type. When reading a field, we don't
+  // need to specify the exact type in the ::init() call. Specifying a type
+  // sets some defaults when you are creating a field but when reading an
+  // existing one, there's no real advantage to specificity
+  $body = CINC::init('Field')->machine_name('body');
+
+  // This will add the body field if it's not already there
+  $news->add_field_if_missing($body);
+
+  // If you want to make instance-specific changes to the body field on the
+  // news type, you can do so now.
+  $body
+    ->set_instance('label', 'Article')
+    ->instance->update();
+
+  // Add a new field for author. Currently the best pattern to do this is to:
+  //
+  // - create the field object
+  // - set any field setting
+  // - save the field
+  // - add it to the content type
+  // - then set/change instance settings secondarily
+  //
+  // Setting the instance settings after creating the instance will allow you
+  // to change the instance settings later. The first create_or_update() call
+  // will only update the field settings and add_field_if_missing() does not
+  // currently catch instance setting changes.
+  $author = CINC::init('TextField')
+    ->machine_name('field_news_author')
+    ->create_or_update();
+  $news->add_field_if_missing($author);
+  $author
+    ->read_instance_for('node', $news)
+    ->set_instance('label', 'Author')
+    ->instance->update();
 }

@@ -1,5 +1,5 @@
 name = CINC Example Content Type 1
-description = Simple content type creation
+description = Simple content type creation and field basics
 core = 7.x
 
 dependencies[] = cinc
