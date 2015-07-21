@@ -64,4 +64,16 @@ function cinc_ex_content_type1_create() {
     ->read_instance_for('node', $news)
     ->set_instance('label', 'Author')
     ->instance->update();
+    
+  // Add a new field group. Fields in a group as saved with the group, so must
+  // be added before the group is saved. The machine name is a combination of
+  // the group name, the entity type, the bundle name, and the group context.
+  // All of those are necessary to uniquely identify a group.
+  $group = CINC::init('FieldGroup')
+    ->machine_name('group_news_fields|node|news|form')
+    ->read();
+  $group
+    ->add_field($body)
+    ->add_field($author);
+  $group->create_or_update();
 }
