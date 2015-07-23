@@ -1,0 +1,53 @@
+<?php
+/**
+ * Implements hook_enable().
+ */
+function cinc_field_collections_enable() {
+  cinc_field_collections_create_vocabs();
+  cinc_field_collections_create_types();
+  cinc_field_collections_create_fields();
+}
+
+/**
+ * Create fields.
+ */
+function cinc_field_collections_create_fields() {
+  CINC::init('FieldCollectionField')
+    ->machine_name('field_project_developer')
+    ->set('cardinality', -1)
+    ->create_or_update()
+    ->create_or_update_instance_for('node', 'project');
+
+  CINC::init('TextField')
+    ->machine_name('field_developer_name')
+    ->create_or_update()
+    ->set_instance('label', 'Name')
+    ->create_or_update_instance_for('field_collection_item', 'field_project_developer');
+
+  CINC::init('TermReferenceField')
+    ->machine_name('field_developer_role')
+    ->allow_vocab('roles')
+    ->create_or_update()
+    ->set_instance('label', 'Role')
+    ->create_or_update_instance_for('field_collection_item', 'field_project_role');
+}
+
+/**
+ * Create content types.
+ */
+function cinc_field_collections_create_types() {
+  CINC::init('ContentType')
+    ->machine_name('project')
+    ->set('description', 'A valuable project to build.')
+    ->create_or_update();
+}
+
+/**
+ * Create vocabs
+ */
+function cinc_field_collections_create_vocabs() {
+  $roles = CINC::init('TaxonomyVocabulary')
+    ->machine_name('roles')
+    ->set('name', 'Roles')
+    ->create_or_update();
+}

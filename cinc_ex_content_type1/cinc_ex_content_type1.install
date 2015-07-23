@@ -23,7 +23,8 @@ function cinc_ex_content_type1_create() {
   // This creates a content type called news. CINC will label this content type
   $news = CINC::init('ContentType')
     ->machine_name('news')
-    // set the label manually to something other than the auto-generated label
+    // set the title field's label manually to something other than the
+    // auto-generated label
     ->set('title_label', 'Article')
     // set the description
     ->set('description', 'A timely post about something happening now')
@@ -64,7 +65,7 @@ function cinc_ex_content_type1_create() {
     ->read_instance_for('node', $news)
     ->set_instance('label', 'Author')
     ->instance->update();
-    
+
   // Add a new field group. Fields in a group as saved with the group, so must
   // be added before the group is saved. The machine name is a combination of
   // the group name, the entity type, the bundle name, and the group context.
