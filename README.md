@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # CINC Examples
 
 Some examples of CINC usage for various tasks
